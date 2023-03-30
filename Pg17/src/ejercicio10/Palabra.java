@@ -11,7 +11,12 @@ public class Palabra{
 		this.Espanyol = Espanyol;
 		this.Ingles = Ingles;
 	}
-
+	
+	public Palabra(String Espanyol, String Ingles) {
+		this.Espanyol = Espanyol;
+		this.Ingles = Ingles;
+	}
+	
 	public String getEspanyol() { return Espanyol; }
 	public void setEspanyol(String pEspanyol) { this.Espanyol = pEspanyol; }
 	public String getIngles() { return Ingles; }
