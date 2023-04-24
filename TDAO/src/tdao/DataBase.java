@@ -1,50 +1,46 @@
-package patron;
+package tdao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class BD {
+public class DataBase {
 	
 	private String url;
 	private String user;
 	private String password;
 	private String schema;
-	private boolean conectado;
 	
 	private Connection con;
 	
-	public BD(String url, String user, String password) {
+	public DataBase(String url, String user, String password) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
 		this.schema = url.substring(url.lastIndexOf("/"),url.length());
-		this.conectado = false;
 	}
 
-	public boolean isConectado() { return conectado; }
+	public boolean isConectado(){ 
+		try { return con.isClosed();
+		} catch (SQLException e) { return false; }
+	}
 
 	public boolean conectar() {
-		try {
-			con = DriverManager.getConnection(url,user,password);
-			conectado = true;
-		} catch (SQLException e) {
-			con = null;
-			conectado = false;
-		}
-		return conectado;
+		try { con = DriverManager.getConnection(url,user,password); } 
+		catch (SQLException e) { e.printStackTrace();}
+		return isConectado();
 	}
 	
 	public boolean desconectar() { 
-		try {
-			if(conectado) { con.close(); conectado = false; }
-		} catch (SQLException e) {
-			conectado = true;
-		} 
-		return !conectado;
+		try { con.close(); }
+		catch (SQLException e) { e.printStackTrace();}
+		return isConectado();
 	}
 	
-	public Tabla dameTabla(String nombre) throws SQLException { return new Tabla( nombre, con, schema); }
+	public Tabla dameTabla(String nombre){ 
+		try { return new Tabla( nombre, con, schema); }
+		catch (SQLException e) { return null; } 
+	}
 }
 	/* Obtiene un listado de nombres de las tablas en la base de datos
 SELECT DISTINCT TABLE_NAME
